@@ -1,0 +1,20 @@
+{
+  "source_repository": "dvd233/react-use",
+  "source_commit": "02ede5fccd61ae908b73a9b6c8663a85f4a1732b",
+  "baseline_commit": "fbe99c6327e6af94df03bc8bd6ecc5e3ff04fbcc",
+  "baseline_tree": "a0e86d6271c1a1c3b7edc4f5cea8447a71d1c122",
+  "source_tree": "f5b8d3b56fa0652d5d29f6f69727c557e41e23fb",
+  "package_sha256": "5c329040df88366a62900d1697400a5513333e5c44a3d41f68132a49c06cb1bf",
+  "lock_sha256": "aae9b0c77a5fea80e11fce28968a9a8440672920b6c3e2348a4936976907a7d9",
+  "source_file_sha256": {
+    "src/usePermission.ts": "c69acfc2d3007c175e9169b0da9b50335136d223dc50e918dad76dddf07cb410",
+    "tests/usePermission.test.ts": "ffdad12f1a417d44a60260b0dd5ddbd68b347581a9170fc16d15c87fa308786b"
+  },
+  "source_repository_id": "1407991245",
+  "source_owner_id": "111864431",
+  "parent_repository": "streamich/react-use",
+  "parent_repository_id": "154950925",
+  "default_branch": "master",
+  "source_branch": "fix/use-permission-cleanup",
+  "harness_branch": "validation/use-permission-coverage-20261007"
+}

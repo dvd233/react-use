@@ -1,0 +1,75 @@
+name: usePermission focused original-lock coverage
+
+on:
+  push:
+    branches:
+      - validation/use-permission-coverage-20261007
+
+permissions:
+  contents: read
+
+jobs:
+  coverage:
+    if: ${{ github.repository_id == '1407991245' && github.repository_owner_id == '111864431' && github.ref == 'refs/heads/validation/use-permission-coverage-20261007' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the separately reviewed coverage harness
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          path: validation
+          persist-credentials: false
+
+      - name: Set up upstream Node20
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 20
+
+      - name: Check exact repository, ref and immutable source bindings
+        id: bindings
+        run: >-
+          node validation/.github/validation/use-permission-coverage.cjs
+          check-bindings
+          validation/.github/validation/use-permission-coverage-bindings.json
+
+      - name: Set up repository-recorded Yarn Classic
+        run: |
+          corepack enable
+          corepack prepare yarn@1.22.22 --activate
+          test "$(yarn --version)" = "1.22.22"
+
+      - name: Read unchanged baseline for scope checks only
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: streamich/react-use
+          ref: fbe99c6327e6af94df03bc8bd6ecc5e3ff04fbcc
+          path: baseline
+          persist-credentials: false
+
+      - name: Check out the frozen candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: ${{ steps.bindings.outputs.source_repository }}
+          ref: ${{ steps.bindings.outputs.source_commit }}
+          path: candidate
+          persist-credentials: false
+
+      - name: Install original lock and measure only the target hook
+        env:
+          VALIDATION_OUTPUT: ${{ runner.temp }}/use-permission-coverage
+        run: >-
+          node validation/.github/validation/use-permission-coverage.cjs
+          run
+          validation/.github/validation/use-permission-coverage-bindings.json
+          baseline
+          candidate
+
+      - name: Preserve actual coverage, tests and logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: use-permission-coverage-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/use-permission-coverage
+          if-no-files-found: error
+          retention-days: 14
